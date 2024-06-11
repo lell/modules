@@ -36,10 +36,10 @@
 <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
-  <div style="background-color: black; width:100%; height:30px; float:left;">
-    <a href="https://www.sfu.ca/">
+  <div style="background-color: #3d3639; width:100%; height:20px; float:left;">
+    <!--a href="https://www.sfu.ca/">
       <img src="static/black.png" style="float:left; width:60px; margin-right:20px; border:0px;">
-    </a>
+    </a-->
   </div>
   <div style="background-color: #58525e;">
     <div class="header">
@@ -100,9 +100,9 @@
         </div>
       </span>
   </div>
-  <div class="footer" >
+  <div class="footer">
   <span>&nbsp;
-    <div class="bottom" style="bottom:0px; position:relative;">
+    <div class="bottom" style="bottom:2px; position:relative;">
       <i>
         Simon Fraser University acknowledges the unceded Traditional Coast Salish Lands including the Tsleil-Waututh (s&#601;l&#787;ilw&#787;&#601;ta&#660;&#620;), Kwikwetlem (k&#695;ik&#695;&#601;&#411;&#787;&#601;m), Squamish (S&#7733;wx&#817;w&uacute;7mesh &Uacute;xwumixw) and Musqueam (x&#695;m&#601;&theta;k&#695;&#601;y&#787;&#601;m) Nations.
       </i>
@@ -119,10 +119,10 @@ click = function(event) {
   $("input").prop('disabled', true);
   $("input").click(function() { return false; });
   $("input").on("mousedown", function() { return false; });
-  $("input").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important; width: 50%;");
+  $("input[name='team']").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important; width:50%");
+  $("input[name='handles']").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important; width:90%");
   if ($("button").html() == "Create") {
    setTimeout(function() {
-    alert('creating');
      $.post({
        url:'teams.html',
        data: { handles: $('input[name="handles"]').val(), team: $('input[name="team"]').val(), action : "create" },
@@ -136,11 +136,11 @@ click = function(event) {
             } else if (data.status == -999) {
               window.location.replace('/');
             } else {
-              $('p[name="content"]').html('<span class="error">' + data.message + ' Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input placeholder = "Team Name" name="team" style="width:50%;"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
+              $('p[name="content"]').html('<span class="error">' + data.message + ' Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Team Name" name="team" style="width:50%;"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
             }
 
           } catch(error) {
-            $('p[name="content"]').html('<span class="error">An error occurred. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input placeholder = "Team Name" style="width:50%;" name="team"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
+            $('p[name="content"]').html('<span class="error">An error occurred. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Team Name" style="width:50%;" name="team"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
           }
           
           setup();
@@ -149,7 +149,6 @@ click = function(event) {
        }})}, 500);
   } else if ($("button").html() == "Dissolve") {
    setTimeout(function() {
-    alert('dissolving');
      $.post({
        url:'teams.html',
        data: { action : "dissolve" },
@@ -159,7 +158,7 @@ click = function(event) {
             if (data.status == 1) {
               team = "";
               teammates = "";
-      $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You currently aren&rsquo;t in a team. Would you like to create a team?&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="team" placeholder = "Team Name" style="width:50%;"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." style="width:90%;" name="handles"></big><br><br><big><button>Create</button>');
+      $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You currently aren&rsquo;t in a team. Would you like to create a team?&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="team" placeholder = "Team Name" style="width:50%;"></big><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." style="width:90%;" name="handles"></big><br><br><big><button>Create</button>');
             } else if (data.status == -999) {
               window.location.replace('/');
             } else {
@@ -177,7 +176,7 @@ click = function(event) {
           $('p[name="content"]').css({ 'opacity' : 1.0 });
        }})}, 500);
   } else {
-    alert("Error! " + $("button").html());
+    window.location.replace('/');
   }
 }
 
@@ -186,7 +185,7 @@ $(function() {
     window.location.replace('/');
   } else {
     if (team == '') {
-      $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You currently aren&rsquo;t in a team. Would you like to create a team?&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="team" placeholder = "Team Name" style="width:50%;"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." style="width:90%;" name="handles"></big><br><br><big><button>Create</button>');
+      $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You currently aren&rsquo;t in a team. Would you like to create a team?&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="team" placeholder = "Team Name" style="width:50%;"></big><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." style="width:90%;" name="handles"></big><br><br><big><button>Create</button>');
     } else {
       $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
     }

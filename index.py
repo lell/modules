@@ -132,7 +132,7 @@ def teams():
       for handle in handles:
         result = db.handles.find_one({ 'handle' : handle })
         if result is None:
-          return { 'status' : -5, 'message' : 'One or more of those handles does not exist.' }
+          return { 'status' : -5, 'message' : 'One or more of those handles doesn&rsquo;t exist.' }
 
       if len(handles) != len(set(handles)):
         return { 'status' : -6, 'message' : 'You can&rsquo;t provide a handle more than once.' }
