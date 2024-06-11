@@ -14,6 +14,7 @@ function eraseCookie(key) {
   setCookie(key, keyValue, '-1');
 }
 
+var working = 0;
 setup = function() {
   $("#button").button();
   $("#button-icon").button({
@@ -38,13 +39,16 @@ setup = function() {
 
   $(':input').addClass("ui-widget ui-widget-content ui-corner-all");
 
-  $(document).on('keypress', 'input', function(e) {
+  $(':input:enabled:visible:first').focus();
+  $(document).on('keydown', 'input', function(e) {
     if (e.which == 13) {
-      click();
+      if (working == 0) {
+        click();
+        working = 1;
+      }
       return false;
     }
   });
-  $(':input:enabled:visible:first').focus();
 }
 
 function logout() {
