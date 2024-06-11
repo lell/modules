@@ -38,8 +38,8 @@
         <center>
           <div name="topbar" style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
             {% if session is defined and session.sid is defined and session.sid|length > 0 %}
-              <a href="/">Leaderboard</a> &nbsp;&nbsp;
-              <a href="submit.html">Submissions</a> &nbsp;&nbsp;
+              <a href="/">Leaderboard</a> &nbsp;&nbsp;{% if session is defined and session.team is defined and session.team|length > 0 %}
+              <a href="submit.html">Submissions</a> &nbsp;&nbsp;{% endif %}
               <a href="teams.html">Teams</a> &nbsp;&nbsp;
               <a href="data.html">Data</a> &nbsp;&nbsp;
               <a href="javascript:logout();">Logout</a> &nbsp;&nbsp;

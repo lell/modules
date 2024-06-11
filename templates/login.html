@@ -26,10 +26,10 @@
 <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
-  <div style="background-color: black; width:100%; height:30px; float:left;">
-    <a href="https://www.sfu.ca/">
+  <div style="background-color: #3d3639; width:100%; height:20px; float:left;">
+    <!--a href="https://www.sfu.ca/">
       <img src="static/black.png" style="float:left; width:60px; margin-right:20px; border:0px;">
-    </a>
+    </a-->
   </div>
   <div style="background-color: #58525e;">
     <div class="header">
@@ -37,7 +37,7 @@
         <center>
           <div style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
             <a href="index.html">Leaderboard</a> &nbsp;&nbsp;
-            <a href="software.html">Data</a> &nbsp;&nbsp;
+            <a href="data.html">Data</a> &nbsp;&nbsp;
             <a href="signup.html"> Signup</a> &nbsp;&nbsp;
             Login &nbsp;&nbsp;
           </div>
@@ -89,9 +89,9 @@
         </div>
       </span>
   </div>
-  <div class="footer" >
+  <div class="footer">
   <span>&nbsp;
-    <div class="bottom" style="bottom:0px; position:relative;">
+    <div class="bottom" style="bottom:2px; position:relative;">
       <i>
         Simon Fraser University acknowledges the unceded Traditional Coast Salish Lands including the Tsleil-Waututh (s&#601;l&#787;ilw&#787;&#601;ta&#660;&#620;), Kwikwetlem (k&#695;ik&#695;&#601;&#411;&#787;&#601;m), Squamish (S&#7733;wx&#817;w&uacute;7mesh &Uacute;xwumixw) and Musqueam (x&#695;m&#601;&theta;k&#695;&#601;y&#787;&#601;m) Nations.
       </i>
@@ -119,7 +119,7 @@ click = function(event) {
             setCookie('sid', data.session);
             window.location.href = '/';
           } else {
-            $('p[name="content"]').html('<span id="error">Invalid handle or password. Please try again</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br> <big><input name="handle" placeholder = "Handle" style="width:50%;"></big><br><br> <big><input placeholder = "Password" type="password" name="password" style="width:50%;"></big><br><br> <big><button>Login</button>');
+            $('p[name="content"]').html('<span class="error">Invalid handle or password. Please try again.</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br> <big><input name="handle" placeholder = "Handle" style="width:50%;"></big><br><br> <big><input placeholder = "Password" type="password" name="password" style="width:50%;"></big><br><br> <big><button>Login</button>');
 
           }
         } catch(error) {
@@ -134,7 +134,7 @@ click = function(event) {
 
 $(function() {
   if (sid == '') {
-    $('p[name="content"]').html('Hello! Please enter your handle and password&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br> <big><input name="handle" placeholder = "Handle" style="width:50%;"></big><br><br> <big><input placeholder = "Password" type="password" name="password" style="width:50%;"></big><br><br> <big><button>Login</button>');
+    $('p[name="content"]').html('Hello! Please enter your handle and password.&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br> <big><input name="handle" placeholder = "Handle" style="width:50%;"></big><br><br> <big><input placeholder = "Password" type="password" name="password" style="width:50%;"></big><br><br> <big><button>Login</button>');
   } else {
     window.location.replace('/');
   }

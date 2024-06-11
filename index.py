@@ -92,6 +92,12 @@ def data():
   result = render_template('data.html', session = session)
   return result
 
+@app.route('/submit.html', methods = ['GET', 'POST'])
+def submit():
+  session = auth()
+  result = render_template('submit.html', session = session)
+  return result
+
 @app.route('/teams.html', methods = ['GET', 'POST'])
 def teams():
   session = auth()
@@ -110,7 +116,7 @@ def teams():
       handles = [handle for handle in handles if handle]
       
       if len(handles) < 3 or len(handles) > 4:
-        return { 'status' : -1, 'message' : 'Team size must be 3 or 4.' }
+        return { 'status' : -1, 'message' : 'Your team size must be 3 or 4.' }
       
       client = MongoClient("localhost")
       db = client.module01
@@ -118,7 +124,7 @@ def teams():
       team = request.values.get('team').strip()
 
       if team == "":
-        return { 'status' : -2, 'message' : 'Team name must be nonempty.' }
+        return { 'status' : -2, 'message' : 'Your team name must be nonempty.' }
 
       result = teams.find_one({ "team": team })
 
@@ -132,7 +138,7 @@ def teams():
       for handle in handles:
         result = db.handles.find_one({ 'handle' : handle })
         if result is None:
-          return { 'status' : -5, 'message' : 'One or more of those handles doesn&rsquo;t exist.' }
+          return { 'status' : -5, 'message' : 'One of those handles doesn&rsquo;t exist.' }
 
       if len(handles) != len(set(handles)):
         return { 'status' : -6, 'message' : 'You can&rsquo;t provide a handle more than once.' }
@@ -164,17 +170,22 @@ def teams():
         teams = db.teams
         result = teams.delete_many({ "team" : team })
 
+        print(1)
         if result is None:
           return { 'status' : -1 }
 
+        print(2)
         if result.deleted_count == 0:
           return { 'status' : -2 }
 
+        print(3)
         if result.deleted_count > 1:
           return { 'status' : -3 }
         
+        print(4)
         return { 'status' : 1 }
 
+      print(5)
       return { 'status' : 0 }
 
   result = render_template('teams.html', session = session)

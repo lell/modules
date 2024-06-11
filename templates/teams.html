@@ -45,9 +45,9 @@
     <div class="header">
       <big>
         <center>
-          <div style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
-            <a href="index.html">Leaderboard</a> &nbsp;&nbsp;
-            <a href="submit.html">Submissions</a> &nbsp;&nbsp;
+          <div name="topbar" style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
+            <a href="index.html">Leaderboard</a> &nbsp;&nbsp;{% if session is defined and session.team is defined and session.team|length > 0 %}
+            <a href="submit.html">Submissions</a> &nbsp;&nbsp;{% endif %}
             Teams &nbsp;&nbsp;
             <a href="data.html">Data</a> &nbsp;&nbsp;
             <a href="javascript:logout();">Logout</a> &nbsp;&nbsp;
@@ -122,6 +122,7 @@ click = function(event) {
   $("input[name='team']").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important; width:50%");
   $("input[name='handles']").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important; width:90%");
   if ($("button").html() == "Create") {
+    working = 1;
    setTimeout(function() {
      $.post({
        url:'teams.html',
@@ -133,20 +134,27 @@ click = function(event) {
               team = data.team;
               teammates = data.teammates;
               $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
+            $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;<a href="submit.html">Submissions</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
             } else if (data.status == -999) {
               window.location.replace('/');
             } else {
-              $('p[name="content"]').html('<span class="error">' + data.message + ' Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Team Name" name="team" style="width:50%;"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
+              team = "";
+              teammates = "";
+              $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! <span class="error">' + data.message + ' Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input placeholder = "Team Name" name="team" style="width:50%;"></big><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
             }
 
           } catch(error) {
-            $('p[name="content"]').html('<span class="error">An error occurred. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Team Name" style="width:50%;" name="team"></big><br><br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
+              team = "";
+              teammates = "";
+            $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! <span class="error">An error occurred. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input placeholder = "Team Name" style="width:50%;" name="team"></big><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." name="handles" style="width:90%;"></big><br><br><big><button>Create</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
           }
           
           setup();
           $("button").on("click", click);
           $('p[name="content"]').css({ 'opacity' : 1.0 });
-       }})}, 500);
+       working = 0;}})}, 500);
   } else if ($("button").html() == "Dissolve") {
    setTimeout(function() {
      $.post({
@@ -159,22 +167,25 @@ click = function(event) {
               team = "";
               teammates = "";
       $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You currently aren&rsquo;t in a team. Would you like to create a team?&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="team" placeholder = "Team Name" style="width:50%;"></big><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." style="width:90%;" name="handles"></big><br><br><big><button>Create</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
             } else if (data.status == -999) {
               window.location.replace('/');
             } else {
-              $('p[name="content"]').html('<span id="error">An error occurred</span>. You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
+              $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! <span id="error">An error occurred</span>. You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;<a href="submit.html">Submissions</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
 
             }
 
           } catch(error) {
-              $('p[name="content"]').html('span id="error">An error occurred</span>. You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
+              $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! <span id="error">An error occurred</span>. You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;<a href="submit.html">Submissions</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
 
           }
           
           setup();
           $("button").on("click", click);
           $('p[name="content"]').css({ 'opacity' : 1.0 });
-       }})}, 500);
+       working = 0;}})}, 500);
   } else {
     window.location.replace('/');
   }
@@ -186,8 +197,10 @@ $(function() {
   } else {
     if (team == '') {
       $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You currently aren&rsquo;t in a team. Would you like to create a team?&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="team" placeholder = "Team Name" style="width:50%;"></big><br><br>Who are the teammates? Make sure to include yourself in this list.<br><big><input placeholder = "Handle 1; Handle 2; Handle 3 ..." style="width:90%;" name="handles"></big><br><br><big><button>Create</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
     } else {
       $('p[name="content"]').html('Hello, <i>{{ session.handle }}</i> ! You&rsquo;re in team <i>' + team + '</i> ! Here&rsquo;re the members of this team:<br><br><i>' + teammates + '</i> !<br><br>If this isn&rsquo;t right, you can dissolve the team and reform it&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><button>Dissolve</button>');
+              $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;<a href="submit.html">Submissions</a> &nbsp;&nbsp;Teams &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
     }
     $("button").on("click", click);
   }

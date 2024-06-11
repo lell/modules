@@ -95,7 +95,11 @@
           <br>
           <div class="content">
             <p class="content" name="content">
-              zz
+              {% if session is defined and session.handle is defined and session.handle|length > 0  %}
+                Hello, <i>{{ session.handle }}</i> ! Drag a file here to make a new submission:&nbsp;&nbsp;&mdash;<br><br>Here are team <i>{{session.team}}</i>&rsquo;s previous submissions:
+              {% else %}
+                Hello!
+              {% endif %}
             </p>
           </div>
         </div>
