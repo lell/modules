@@ -26,6 +26,39 @@ def add_header(r):
 def auth():
   client = MongoClient("localhost")
   db = client.module01
+  # try:
+  if 'sid' in request.cookies:
+    sid = request.cookies['sid']
+    client = MongoClient("localhost")
+    db = client.module01
+    sessions = db.sessions
+    result = sessions.find_one({'session' : sid})
+
+    handle = ""
+    if result is not None:
+      handle = result["handle"]
+
+    teams = db.teams
+    result = teams.find_one({ 'handles' : { '$in' : [ handle ] }})
+
+    team = ""
+    if result is not None:
+      team = result["team"]
+
+    teammates = ""
+    if team != "":
+      teammates = ' , '.join(result['handles'])
+
+    return { "sid" : sid, "handle" : handle, "team" : team, "teammates" : teammates }
+
+  # except:
+  #   pass
+
+  return { "sid" : '', "handle" : "", "team" : "" }
+
+def teammates():
+  client = MongoClient("localhost")
+  db = client.module01
   try:
     if 'sid' in request.cookies:
       sid = request.cookies['sid']
@@ -45,12 +78,13 @@ def auth():
       if result is not None:
         team = result["team"]
 
-      return { "sid" : sid, "handle" : handle, "team" : team }
+      return result['handles']
 
   except:
     pass
 
-  return { "sid" : '', "handle" : "", "team" : "" }
+  return []
+  
 
 @app.route('/data.html', methods = ['GET'])
 def data():
@@ -62,69 +96,86 @@ def data():
 def teams():
   session = auth()
   if request.method == 'POST':
-    # try:
-    print(1)
-    if session['sid'] == '':
-      return { 'status' : -999 }
+    action = request.values.get('action')
+    if action == "create":
+      # try:
+      if session['sid'] == '':
+        return { 'status' : -999 }
 
-    print(1.5)
-    handles = request.values.get('handles')
-    print(handles)
-    handles = handles.split(';')
-    print(handles)
-    print(2)
-    for i in range(len(handles)):
-      handles[i] = handles[i].strip()
+      handles = request.values.get('handles')
+      handles = handles.split(';')
+      for i in range(len(handles)):
+        handles[i] = handles[i].strip()
 
-    handles = [handle for handle in handles if handle]
-    
-    print(3)
-    if len(handles) == 0:
-      return { 'status' : -1, 'message' : 'One or more handles must be provided.' }
+      handles = [handle for handle in handles if handle]
+      
+      if len(handles) < 3 or len(handles) > 4:
+        return { 'status' : -1, 'message' : 'Team size must be 3 or 4.' }
+      
+      client = MongoClient("localhost")
+      db = client.module01
+      teams = db.teams
+      team = request.values.get('team').strip()
 
-    print(4)
-    client = MongoClient("localhost")
-    db = client.module01
-    teams = db.teams
-    team = request.values.get('team').strip()
+      if team == "":
+        return { 'status' : -2, 'message' : 'Team name must be nonempty.' }
 
-    print(5)
-    if len(team) == 0:
-      return { 'status' : -2, 'message' : 'Team name must be nonempty.' }
+      result = teams.find_one({ "team": team })
 
-    result = teams.find_one({ "team": team })
+      if result is not None:
+        return { 'status' : -3, 'message' : 'That team name is already taken.' }
 
-    print(6)
-    if result is not None:
-      return { 'status' : -3, 'message' : 'That team name is already taken.' }
+      result = teams.find_one({ 'handles' : { '$in' : handles }})
+      if result is not None:
+        return { 'status' : -4, 'message' : 'One or more of those handles are already in a team.' }
 
-    print(7)
-    result = teams.find_one({ 'handles' : { '$in' : handles }})
-    if result is not None:
-      return { 'status' : -4, 'message' : 'One or more of those handles are already in a team.' }
+      for handle in handles:
+        result = db.handles.find_one({ 'handle' : handle })
+        if result is None:
+          return { 'status' : -5, 'message' : 'One or more of those handles does not exist.' }
 
-    print(8)
-    for handle in handles:
-      result = db.handles.find_one({ 'handle' : handle })
-      if result is None:
-        return { 'status' : -5, 'message' : 'One or more of those handles does not exist.' }
+      if len(handles) != len(set(handles)):
+        return { 'status' : -6, 'message' : 'You can&rsquo;t provide a handle more than once.' }
 
-    print(9)
-    result = teams.update_one({"$or" : [{"handles": {'$in' : handles }}, {'team': team}]},
-      { "$setOnInsert": { "team": team, "handles" : handles }}, upsert = True)
+      print(session['handle'])
+      if session['handle'] not in handles:
+        return { 'status' : -7, 'message' : 'Make sure you list yourself among the teammates.' }
 
-    print(10)
-    if result.raw_result['updatedExisting'] == False:
-      print("team created")
-      return { 'status' : 1, 'team' : team }
+      result = teams.update_one({"$or" : [{"handles": {'$in' : handles }}, {'team': team}]},
+        { "$setOnInsert": { "team": team, "handles" : handles }}, upsert = True)
+
+      if result.raw_result['updatedExisting'] == False:
+        print("team created")
+        return { 'status' : 1, 'team' : team, "teammates" : ' , '.join(handles) }
 
 
-    #except:
-    #  print('A')
-    #  pass
+      #except:
+      #  print('A')
+      #  pass
 
-    print(11)
-    return { 'status' : 0, 'message' : 'An error occurred.' }
+      return { 'status' : 0, 'message' : 'An error occurred.' }
+
+    elif action == "dissolve":
+      team = session['team']
+
+      if team != "":
+        client = MongoClient("localhost")
+        db = client.module01
+        teams = db.teams
+        result = teams.delete_many({ "team" : team })
+
+        if result is None:
+          return { 'status' : -1 }
+
+        if result.deleted_count == 0:
+          return { 'status' : -2 }
+
+        if result.deleted_count > 1:
+          return { 'status' : -3 }
+        
+        return { 'status' : 1 }
+
+      return { 'status' : 0 }
 
   result = render_template('teams.html', session = session)
   return result
