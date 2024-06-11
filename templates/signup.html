@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="us">
+<head>
+<meta charset="utf-8">
+<meta property="og:title" content="Learning from Big Data">
+<meta property="og:description" content="Machine learning with beauty and care.">
+<meta property="og:image" content="/cube.png">
+<meta property="og:image:secure_url" content="/static/cube.png">
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="250" />
+<meta property="og:image:height" content="273" />
+<meta property="og:url" content="/">
+<title>Learning from Big Data</title>
+<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+<link href="/static/jquery-ui.css" rel="stylesheet">
+<script src="/static/jquery.js"></script>
+<script src="/static/jquery-ui.js"></script>
+<script id="MathJax-script" async src="static/MathJax/es5/tex-mml-chtml.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  {% if session is defined and session.sid is defined and session.sid|length > 0 %}
+    var sid = '{{ session.sid }}';
+  {% else %}
+    var sid = '';
+  {% endif %}
+</script>
+<link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+  <div style="background-color: #3d3639; width:100%; height:20px; float:left;">
+    <!--a href="https://www.sfu.ca/">
+      <img src="static/black.png" style="float:left; width:60px; margin-right:20px; border:0px;">
+    </a-->
+  </div>
+  <div style="background-color: #58525e;">
+    <div class="header">
+      <big>
+        <center>
+          <div name="topbar" style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
+            {% if session is defined and session.sid is defined and session.sid|length > 0 %}
+              <a href="/">Leaderboard</a> &nbsp;&nbsp;
+              <a href="submit.html">Submissions</a> &nbsp;&nbsp;
+              <a href="teams.html">Teams</a> &nbsp;&nbsp;
+              <a href="data.html">Data</a> &nbsp;&nbsp;
+              <a href="javascript:logout();">Logout</a> &nbsp;&nbsp;
+            {% else %}
+              <a href="/">Leaderboard</a> &nbsp;&nbsp;
+              <a href="data.html">Data</a> &nbsp;&nbsp;
+              Signup &nbsp;&nbsp;
+              <a href="login.html">Login</a> &nbsp;&nbsp;
+            {% endif %}
+          </div>
+        </center>
+      </big>
+      <span>&nbsp;
+        <div class="top">
+          <h1>
+            <i>Module 1</i>
+          </h1>
+        </div>&nbsp;
+      </span>
+    </div>
+    <div>
+      <div style="right:0px; top:98px; position: absolute;">
+        <div style="margin: 0px; border-left: 0px; position: static; right: 0px; border-right: 0px; border-bottom: 0px; border-style: solid; border-color: #58525e;">
+	  <table>
+            <tr>
+              <td>
+	        <div style="position:relative; top:10px; margin-top:25px; margin-left:20px;">
+		  <i>
+                    <big>
+                      <span>
+                      </span>
+                    </big>
+                  </i>
+	        </div>
+              </td>
+              <td>
+	        <img style="top:4px; left: -5px; position: relative;" src="static/cube.png" width=125>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="middle1">
+      <span class="middle2">
+        <div class="middle2" style="margin-top:30px;">
+          <h2>
+            Signup
+          </h2>
+
+          <br>
+          <div class="content">
+            <p class="content" name="content">
+            </p>
+          </div>
+        </div>
+      </span>
+      <br>
+  </div>
+  <div class="footer">
+  <span>&nbsp;
+    <div class="bottom" style="bottom:2px; position:relative;">
+      <i>
+        Simon Fraser University acknowledges the unceded Traditional Coast Salish Lands including the Tsleil-Waututh (s&#601;l&#787;ilw&#787;&#601;ta&#660;&#620;), Kwikwetlem (k&#695;ik&#695;&#601;&#411;&#787;&#601;m), Squamish (S&#7733;wx&#817;w&uacute;7mesh &Uacute;xwumixw) and Musqueam (x&#695;m&#601;&theta;k&#695;&#601;y&#787;&#601;m) Nations.
+      </i>
+    </div>&nbsp;
+  </span>
+</div>
+</body>
+<script>
+setup();
+click = function(event) {
+  $("button").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important;");
+  $('img[name="parrot"]').attr('src', '/static/party.gif')
+  $("input").prop('disabled', true);
+  $("input").click(function() { return false; });
+  $("input").on("mousedown", function() { return false; });
+  $("input").attr("style", "color: #a9a9a9 !important; border-color: #a9a9a9 !important; width: 50%;");
+  setTimeout(function() {
+    $.post({
+      url:'signup.html',
+      data: { handle: $('input[name="handle"]').val() },
+      success: function(data, status) {
+        $('p[name="content"]').css({ 'opacity' : 0.0 });
+        try {
+          if (data.status == 1) {
+            $('p[name="content"]').html('Hello, <i>' + data.handle + '</i> ! Your password is:<br><br><tt style="position: relative; left:12pt;">' + data.password + '</tt><br><br>Please keep it safe.&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt>') 
+            $('div[name="topbar"]').html('<a href="/">Leaderboard</a> &nbsp;&nbsp;<a href="submit.html">Submissions</a> &nbsp;&nbsp;<a href="teams.html">Teams</a> &nbsp;&nbsp;<a href="data.html">Data</a> &nbsp;&nbsp;<a href="javascript:logout();">Logout</a> &nbsp;&nbsp;');
+            setCookie('sid', data.session, 90);
+            sid = data.session;
+          } else if (data.status == -1) {
+            $('p[name="content"]').html('<span class="error">The handle <i>' + data.handle + '</i> is already taken. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input class="ui-widget ui-widget-content ui-corner-all" name="handle" placeholder = "Handle" spellcheck="false" style="width:50%;"></big><br><br><big><button>Create</button>');
+          } else if (data.status == -2) {
+            $('p[name="content"]').html('<span class="error">Your handle must be nonempty. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="handle" class="ui-widget ui-widget-content ui-corner-all" placeholder = "Handle" spellcheck="false" style="width:50%;"></big><br><br><big><button>Create</button>');
+          } else {
+            $('p[name="content"]').html('<span class="error">An error occurred. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="handle" class="ui-widget ui-widget-content ui-corner-all" placeholder = "Handle" spellcheck="false" style="width:50%;"></big><br><br><big><button>Create</button>');
+          }
+        } catch(error) {
+          $('p[name="content"]').html('<span class="error">An error occurred. Would you like to try again?</span>&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br><big><input name="handle" class="ui-widget ui-widget-content ui-corner-all" placeholder = "Handle" spellcheck="false" style="width:50%;"></big><br><br><big><button>Create</button>');
+        }
+
+        setup();
+        $("button").on("click", click);
+        $('p[name="content"]').css({ 'opacity' : 1.0 });
+      }}) }, 500);
+}
+
+$(function() {
+  if (sid == '') {
+    $('p[name="content"]').html('Hello! You currently aren&rsquo;t logged in. Would you like to create an account? &mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br> <big><input name="handle" class="ui-widget ui-widget-content ui-corner-all" placeholder = "Handle" spellcheck="false" style="width:50%;"></big><br><br> <big><button>Create</button>');
+  } else {
+    window.location.replace('/');
+  }
+  $("button").on("click", click);
+  setup();
+});
+</script>
+</html>

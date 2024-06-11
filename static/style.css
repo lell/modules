@@ -1,0 +1,278 @@
+body {
+  font-family: "Trebuchet MS", sans-serif;
+  background-color: #222222; 
+  color: #e0dee2;
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+}
+
+div.middle1 {
+  background-color: #3d3639;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: 0px;
+}
+
+span.error {
+  color: #ef7580;
+}
+
+span.middle2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 50px;
+  margin-right: 50px;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  border: 0px;
+}
+
+div.middle2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 50px;
+  margin-right: 50px;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  border: 0px;
+}
+
+li {
+  list-style-position: inside;
+  text-indent: -1em;
+  margin-bottom: 20px;
+}
+
+div.top {
+  margin-top: 0px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 0px;
+}
+
+
+u {
+  text-decoration: underline;
+  -webkit-text-decoration-color: #9f9f9f;
+  text-decoration-color: #9f9f9f;
+}
+
+h2 {
+  padding-top: 20px;
+}
+
+#dialog-link {
+  padding: .4em 1em .4em 20px;
+  text-decoration: none;
+  position: relative;
+}
+
+#dialog-link span.ui-icon {
+  margin: 0 5px 0 0;
+  position: absolute;
+  left: .2em;
+  top: 50%;
+  margin-top: -8px;
+}
+
+#icons {
+  margin: 0;
+  padding: 0;
+}
+
+#icons li {
+  margin: 2px;
+  position: relative;
+  padding: 4px 0;
+  cursor: pointer;
+  float: left;
+  list-style: none;
+}
+
+#icons span.ui-icon {
+  float: left;
+  margin: 0 4px;
+}
+
+.fakewindowcontain .ui-widget-overlay {
+  position: absolute;
+}
+
+select {
+  width: 200px;
+}
+
+li {
+  line-height: 1.5;
+}
+p.content {
+  line-height: 1.5;
+  padding-bottom: 5px;
+}
+
+div.content {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+
+span.title {
+  color: #bbb4c2; /*#ae90ff; /*#f92472; /* f92472 c3245e 259e00 */
+  font-weight: bold;
+}
+
+span.option {
+  color: #bbb4c2; /*#54d992; /*#67d8ef; /* a6e22c 26816e 259e00   9689a4 */
+  font-weight: bold;
+}
+
+span.command {
+  color: #bbb4c2; /*#67d8ef; /* ac80ff #71266e; */
+  font-weight: bold;
+}
+
+ol.content {
+  line-height: 1.25;
+}
+
+ul.content {
+  line-height: 1.25;
+  padding-bottom: 5px;
+}
+
+.math {
+  font-size: 67%; color: #888888;
+}
+
+div.manual1 {
+  background-color: #292328; #58525e;
+  color: #9689a4;
+  height: 100%;
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+  float:left;
+  overflow:auto; 
+}
+
+@font-face {
+  font-family:'DroidSansMono';
+  src: url('static/DroidSansMono.ttf');
+}
+
+div.manual2 {
+  font-family: DroidSansMono;
+  margin: 50px;
+  height: 100%;
+  float:left;
+  line-height: 2;
+  overflow:auto; 
+}
+
+a:link {
+  text-decoration: none;
+  color: #9689a4;
+}
+
+a:visited {
+  text-decoration: none;
+  color: #9689a4;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #bbb4c2;
+}
+
+
+a:active {
+  text-decoration: none;
+  color: #bbb4c2;
+}
+
+input {
+  text-decoration: none;
+  border-color: #3d3639 !important; 
+  color: #9689a4;
+}
+
+button {
+  text-decoration: none;
+  border-color: #3d3639 !important; 
+  color: #e0dee2 !important;
+}
+
+button:hover {
+  text-decoration: none;
+  border-color: #e0dee2 !important;
+}
+
+
+button:active {
+  text-decoration: none;
+  border-color: #e0dee2 !important;
+}
+
+input:active {
+  text-decoration: none;
+  border-color: #e0dee2 !important; 
+}
+
+input:focus {
+  text-decoration: none;
+  border-color: #e0dee2 !important; 
+}
+
+div.header {
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding: 0px;
+  border: 0px;
+  top: 0px;
+  left: 0px;
+  background-color: #58525e;
+}
+
+div.footer {
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  padding: 0px;
+  border: 0px;
+  left: 0px;
+  background-color: #3d3639;
+}
+
+div.bottom {
+  margin-top: 0px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 0px;
+}
+
+input {
+  padding: 4px 4px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+:focus {
+  outline: none !important;
+}
