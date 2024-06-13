@@ -27,11 +27,7 @@
 </script>
 </head>
 <body>
-  <div style="background-color: #3d3639; width:100%; height:20px; float:left;">
-    <!--a href="https://www.sfu.ca/">
-      <img src="static/black.png" style="float:left; width:60px; margin-right:20px; border:0px;">
-    </a-->
-  </div>
+  {% include 'header.html' %}
   <div style="background-color: #58525e;">
     <div class="header">
       <big>
@@ -103,14 +99,6 @@
         </div>
       </span>
   </div>
-  <div class="footer">
-  <span>&nbsp;
-    <div class="bottom" style="bottom:2px; position:relative;">
-      <i>
-        Simon Fraser University acknowledges the unceded Traditional Coast Salish Lands including the Tsleil-Waututh (s&#601;l&#787;ilw&#787;&#601;ta&#660;&#620;), Kwikwetlem (k&#695;ik&#695;&#601;&#411;&#787;&#601;m), Squamish (S&#7733;wx&#817;w&uacute;7mesh &Uacute;xwumixw) and Musqueam (x&#695;m&#601;&theta;k&#695;&#601;y&#787;&#601;m) Nations.
-      </i>
-    </div>&nbsp;
-  </span>
-</div>
+  {% include 'footer.html' %}
 </body>
 </html>

@@ -1,6 +1,10 @@
+html {
+  overflow-y: scroll;
+}
+
 body {
   font-family: "Trebuchet MS", sans-serif;
-  background-color: #222222; 
+  background-color: #282328; 
   color: #e0dee2;
   margin: 0px;
   border: 0px;
@@ -275,4 +279,22 @@ input {
 
 :focus {
   outline: none !important;
+}
+
+
+#fileElem {
+  display: none;
+}
+
+#drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 480px;
+  font-family: sans-serif;
+  margin: 100px auto;
+  padding: 20px;
+}
+
+#drop-area.highlight {
+  border-color: purple;
 }

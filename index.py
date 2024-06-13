@@ -92,6 +92,10 @@ def data():
   result = render_template('data.html', session = session)
   return result
 
+@app.route('/upload.html', methods = ['POST'])
+def upload():
+  return '{}'
+
 @app.route('/submit.html', methods = ['GET', 'POST'])
 def submit():
   session = auth()
