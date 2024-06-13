@@ -57,7 +57,7 @@ def auth():
 
     teammates = ""
     if team != "":
-      teammates = ' , '.join(result['handles'])
+      teammates = ', '.join(result['handles'])
 
     return { "sid" : sid, "handle" : handle, "team" : team, "teammates" : teammates }
 

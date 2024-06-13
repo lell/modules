@@ -283,7 +283,7 @@ input {
 
 
 #droparea {
-  border: 2px dashed #ccc;
+  border: 4px dashed #ccc;
   border-radius: 10px;
   font-size: 36pt;
   max-width: 320px;
@@ -293,6 +293,28 @@ input {
   font-family: sans-serif;
   margin: 10px auto;
   padding: 20px;
+  text-decoration: none;
+  color: #e0dee2 !important;
+  background-color: #5b5761 !important; 
+  border-color: #3d3639 !important; 
+  color: #e0dee2 !important;
+}
+#droparea:hover {
+  border: 4px dashed #ccc;
+  border-radius: 10px;
+  font-size: 36pt;
+  max-width: 320px;
+  max-height: 240px;
+  text-align: center;
+  width: 80%;
+  font-family: sans-serif;
+  margin: 10px auto;
+  padding: 20px;
+  text-decoration: none;
+  color: #e0dee2 !important;
+  background-color: #5b5761 !important; 
+  color: #e0dee2 !important;
+  border-color: #e0dee2 !important;
 }
 
 #droparea.highlight {
