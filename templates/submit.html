@@ -90,21 +90,16 @@
 
           <br>
           <div class="content">
-            <p class="content" name="content">
-              {% if session is defined and session.handle is defined and session.handle|length > 0  %}
-                Hello, <i>{{ session.handle }}</i> ! Drag and drop a file here to make a new submission:&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt><br><br>
-
-<div id="drop-area">
-  <form class="my-form">
-    <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
-    <input type="file" id="fileElem" multiple accept="*" onchange="handleFiles(this.files)">
-    <label class="button" for="fileElem">Select some files</label>
-  </form>
+<p class="content" name="content">
+{% if session is defined and session.handle is defined and session.handle|length > 0  %}
+Hello, <i>{{ session.handle }}</i>! Drag-and-drop a file below to make a new submission.&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt>
+<div id="droparea">
+    +
 </div>
-
-Here are team <i>{{session.team}}</i>&rsquo;s previous submissions:
-
-
+<div style="white-space: normal;">
+<br>Here are team <i>{{session.team}}</i>&rsquo;s previous submissions:
+</div>
+<br>
 <table>
 <tr>
 <td>
@@ -143,56 +138,81 @@ $(function() {
   } else {
 
   }
+
   setup();
-  dropArea = $('#drop-area');
-  function preventDefaults (e) {
-    e.preventDefault();
-    e.stopPropagation();
+
+  $('html').on(
+    'dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  );
+
+  $('html').on(
+    'dragenter', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  );
+
+  $('html').on(
+    'drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  );
+
+  $('#droparea').on(
+    'dragover',
+    function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  )
+
+  $('#droparea').on(
+    'dragenter',
+    function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  )
+
+  function upload(files) {
+    alert('Upload ' + files.length + ' files');
   }
 
-  function highlight(e) {
-    dropArea.classList.add('highlight');
-  }
-
-  function unhighlight(e) {
-    dropArea.classList.remove('highlight');
-  }
-
-  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-    dropArea.addEventListener(eventName, preventDefaults, false);
-  });
-
-  ['dragenter', 'dragover'].forEach(eventName => {
-    dropArea.addEventListener(eventName, highlight, false)
-  });
-
-  ['dragleave', 'drop'].forEach(eventName => {
-    dropArea.addEventListener(eventName, unhighlight, false)
-  });
-
-  function handleDrop(e) {
-    dt = e.dataTransfer;
-    files = dt.files;
-    handleFiles(files);
-  }
-
-  dropArea.addEventListener('drop', handleDrop, false);
-
-  function uploadFile(file) {
-    url = 'upload.html';
-    formData = new FormData();
-    formData.append('file', file);
-
-    setTimeout(function() {
-      $.post({
-        url:'upload.html',
-        data: formData,
-        success: function(data, status) {
-
-        }});
-      }, 500);
-  }
-
+  $('#droparea').on(
+      'drop',
+      function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.originalEvent.dataTransfer.files.length > 1) {
+          alert("Please upload one file.");
+          return;
+        } else if (e.originalEvent.dataTransfer.files.length == 0) {
+          alert("error -2");
+          return;
+        } else if (!e.originalEvent.dataTransfer) {
+           alert("error -3");
+        } else {
+          var fd = new FormData();
+          var file = e.originalEvent.dataTransfer.files;
+          fd.append('file', file[0]);
+          $.ajax({
+            url: "upload.html",
+            type: "POST",
+            data: fd,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: response => {
+              alert("File uploaded successfully");
+            }
+          });
+        }
+      }
+  );
 });
 
 

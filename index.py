@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, request, jsonify
+import os
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+from werkzeug.utils import secure_filename
 from datetime import datetime
 import secrets
 import string
@@ -8,6 +10,14 @@ import bson
 from pymongo import MongoClient
 import logging
 from logging.handlers import RotatingFileHandler
+
+mydir = os.path.dirname(os.path.realpath(__file__))
+UPLOADS = mydir + '/uploads'
+EXTENSIONS = {'txt', 'csv', 'tsv' }
+
+def allowed_file(filename):
+  return '.' in filename and filename.rsplit('.', 1)[1].lower() in EXTENSIONS
+
 
 app = Flask(__name__)
 
@@ -94,7 +104,22 @@ def data():
 
 @app.route('/upload.html', methods = ['POST'])
 def upload():
-  return '{}'
+  if 'file' not in request.files:
+    return { 'status' : -1, 'message' : 'Invalid POST request.' }
+
+  file = request.files['file']
+  if not file:
+    return { 'status' : -2, 'message' : 'Could not find file.' }
+
+  if file.filename == '':
+    return { 'status' : -3, 'message' : 'No file selected.' }
+  
+  if not allowed_file(file.filename):
+    return { 'status' : -4, 'message' : 'Invalid filename.' }
+
+  filename = secure_filename(file.filename)
+  file.save(os.path.join(UPLOADS, filename))
+  return { 'status' : 1 }
 
 @app.route('/submit.html', methods = ['GET', 'POST'])
 def submit():

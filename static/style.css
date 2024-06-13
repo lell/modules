@@ -282,19 +282,19 @@ input {
 }
 
 
-#fileElem {
-  display: none;
-}
-
-#drop-area {
+#droparea {
   border: 2px dashed #ccc;
-  border-radius: 20px;
-  width: 480px;
+  border-radius: 10px;
+  font-size: 36pt;
+  max-width: 320px;
+  max-height: 240px;
+  text-align: center;
+  width: 80%;
   font-family: sans-serif;
-  margin: 100px auto;
+  margin: 10px auto;
   padding: 20px;
 }
 
-#drop-area.highlight {
+#droparea.highlight {
   border-color: purple;
 }
