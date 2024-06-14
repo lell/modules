@@ -174,6 +174,18 @@ $(function() {
   $('#droparea').on(
     'dragenter',
     function(e) {
+      $("#droparea").css("font-weight", "bold");
+      $("#droparea").css("border-color", "#e0dee2");
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  )
+
+  $('#droparea').on(
+    'dragleave',
+    function(e) {
+      $("#droparea").css("font-weight", "normal");
+      $("#droparea").css("border-color", "#3d3639");
       e.preventDefault();
       e.stopPropagation();
     }
@@ -188,6 +200,10 @@ $(function() {
       function(e){
         e.preventDefault();
         e.stopPropagation();
+      $("#droparea").css("font-weight", "normal");
+      $("#droparea").css("border-color", "#3d3639");
+      $("#droparea").css("color", "#a9a9a9");
+      $("#droparea").css("border-color", "#a9a9a9");
         if (e.originalEvent.dataTransfer.files.length > 1) {
           alert("Please upload one file.");
           return;
@@ -208,7 +224,7 @@ $(function() {
             processData: false,
             dataType: 'json',
             success: response => {
-              alert("File uploaded successfully");
+              //alert("File uploaded successfully");
             }
           });
         }

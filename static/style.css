@@ -296,7 +296,7 @@ input {
   text-decoration: none;
   color: #e0dee2 !important;
   background-color: #58525e; !important; 
-  border-color: #3d3639 !important; 
+  border-color: #3d3639;
   color: #e0dee2 !important;
 }
 #droparea:hover {
@@ -314,7 +314,7 @@ input {
   color: #e0dee2 !important;
   background-color: #58525e; !important; 
   color: #e0dee2 !important;
-  border-color: #e0dee2 !important;
+  border-color: #e0dee2;
 }
 
 #droparea.highlight {
