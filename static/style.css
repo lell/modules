@@ -294,10 +294,10 @@ input {
   margin: 10px auto;
   padding: 20px;
   text-decoration: none;
-  color: #e0dee2 !important;
-  background-color: #58525e; !important; 
+  color: #e0dee2;
+  background-color: #58525e; 
   border-color: #3d3639;
-  color: #e0dee2 !important;
+  color: #e0dee2;
 }
 #droparea:hover {
   border: 4px dashed #ccc;
@@ -311,9 +311,9 @@ input {
   margin: 10px auto;
   padding: 20px;
   text-decoration: none;
-  color: #e0dee2 !important;
-  background-color: #58525e; !important; 
-  color: #e0dee2 !important;
+  color: #e0dee2;
+  background-color: #58525e; 
+  color: #e0dee2;
   border-color: #e0dee2;
 }
 

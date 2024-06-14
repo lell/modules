@@ -181,6 +181,18 @@ $(function() {
     }
   )
 
+  $("#droparea").mouseenter(function(){
+    if (!working) {
+      $("#droparea").css("border-color", "#e0dee2");
+    }
+  });
+
+  $("#droparea").mouseleave(function(){
+    if (!working) {
+      $("#droparea").css("border-color", "#3d3639");
+    }
+  });
+
   $('#droparea').on(
     'dragleave',
     function(e) {
@@ -200,8 +212,7 @@ $(function() {
       function(e){
         e.preventDefault();
         e.stopPropagation();
-      $("#droparea").css("font-weight", "normal");
-      $("#droparea").css("border-color", "#3d3639");
+      $("#droparea").css("font-weight", "bold");
       $("#droparea").css("color", "#a9a9a9");
       $("#droparea").css("border-color", "#a9a9a9");
         if (e.originalEvent.dataTransfer.files.length > 1) {
@@ -216,6 +227,7 @@ $(function() {
           var fd = new FormData();
           var file = e.originalEvent.dataTransfer.files;
           fd.append('file', file[0]);
+          working = 1;
           $.ajax({
             url: "upload.html",
             type: "POST",
