@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from common import *
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -7,23 +8,13 @@ import secrets
 import string
 import bcrypt
 import bson
+from tempfile import mkstemp
+from time import time
 from pymongo import MongoClient
 import logging
 from logging.handlers import RotatingFileHandler
 
-mydir = os.path.dirname(os.path.realpath(__file__))
-UPLOADS = mydir + '/uploads'
-EXTENSIONS = {'txt', 'csv', 'tsv' }
-
-def allowed_file(filename):
-  return '.' in filename and filename.rsplit('.', 1)[1].lower() in EXTENSIONS
-
-
 app = Flask(__name__)
-
-def generate(n):
-  alphabet = string.ascii_letters + string.digits + '_'
-  return(''.join(secrets.choice(alphabet) for i in range(n)))
 
 @app.after_request
 def add_header(r):
@@ -33,68 +24,7 @@ def add_header(r):
   r.headers['Cache-Control'] = 'public, max-age=0'
   return r
 
-def auth():
-  client = MongoClient("localhost")
-  db = client.module01
-  # try:
-  if 'sid' in request.cookies:
-    sid = request.cookies['sid']
-    client = MongoClient("localhost")
-    db = client.module01
-    sessions = db.sessions
-    result = sessions.find_one({'session' : sid})
 
-    handle = ""
-    if result is not None:
-      handle = result["handle"]
-
-    teams = db.teams
-    result = teams.find_one({ 'handles' : { '$in' : [ handle ] }})
-
-    team = ""
-    if result is not None:
-      team = result["team"]
-
-    teammates = ""
-    if team != "":
-      teammates = ', '.join(result['handles'])
-
-    return { "sid" : sid, "handle" : handle, "team" : team, "teammates" : teammates }
-
-  # except:
-  #   pass
-
-  return { "sid" : '', "handle" : "", "team" : "" }
-
-def teammates():
-  client = MongoClient("localhost")
-  db = client.module01
-  try:
-    if 'sid' in request.cookies:
-      sid = request.cookies['sid']
-      client = MongoClient("localhost")
-      db = client.module01
-      sessions = db.sessions
-      result = sessions.find_one({'session' : sid})
-
-      handle = ""
-      if result is not None:
-        handle = result["handle"]
-
-      teams = db.teams
-      result = teams.find_one({ 'handles' : { '$in' : [ handle ] }})
-
-      team = ""
-      if result is not None:
-        team = result["team"]
-
-      return result['handles']
-
-  except:
-    pass
-
-  return []
-  
 
 @app.route('/data.html', methods = ['GET'])
 def data():
@@ -104,28 +34,59 @@ def data():
 
 @app.route('/upload.html', methods = ['POST'])
 def upload():
+  session = auth()
+  if session['sid'] == '':
+    return { 'status' : -1, 'message' : 'You must be signed in.' }
+
+  client = MongoClient("localhost")
+  db = client.module01
+  files = db.files
+
   if 'file' not in request.files:
-    return { 'status' : -1, 'message' : 'Invalid POST request.' }
+    return { 'status' : -2, 'message' : 'Invalid POST request.' }
 
   file = request.files['file']
   if not file:
-    return { 'status' : -2, 'message' : 'Could not find file.' }
+    return { 'status' : -3, 'message' : 'Could not find file.' }
 
   if file.filename == '':
-    return { 'status' : -3, 'message' : 'No file selected.' }
+    return { 'status' : -4, 'message' : 'No file selected.' }
   
   if not allowed_file(file.filename):
-    return { 'status' : -4, 'message' : 'Invalid filename.' }
+    return { 'status' : -5, 'message' : 'Invalid filename.' }
 
-  filename = secure_filename(file.filename)
-  file.save(os.path.join(UPLOADS, filename))
+  (fd, fname) = mkstemp(suffix = "", prefix = 'file_' + generate(3), dir = UPLOADS)
+  os.close(fd)
+  file.save(fname)
+  files.insert_one({ "handle" : session['handle'], "name" : fname, "time" : time() })
+  tasks = db.tasks
+  tasks.insert_one({ "handle" : session['handle'], "type" : "evaluate", "name" : fname, "time" : time() })
   return { 'status' : 1 }
 
 @app.route('/submit.html', methods = ['GET', 'POST'])
 def submit():
-  session = auth()
-  result = render_template('submit.html', session = session)
-  return result
+  if request.method == 'POST':
+    content = "<center><table> <tr class='board'> <td class='board'> Time </td> <td class='board'> Submitter </td> <td class='board'> Public </td> <td class='board'> Private </td> </tr> "
+
+    for result in evaluated():
+      public = "?"
+      if "public" in result:
+        public = "%0.2f" % (100 * result["public"]) + "%"
+
+      content = content + "<tr class='board'>"
+      content = content + "<td class='board'>" + timestamp(result["time"]) + "</td>"
+      content = content + "<td class='board'>" + result["handle"] + "</td>"
+      content = content + "<td class='board'>" + public + "</td>"
+      content = content + "<td class='board'> ? </td>"
+      content = content + "</tr>"
+
+    content = content + "</table></center>"
+    return { "content" : content }
+
+  else:
+    session = auth()
+    result = render_template('submit.html', session = session)
+    return result
 
 @app.route('/teams.html', methods = ['GET', 'POST'])
 def teams():
@@ -135,7 +96,7 @@ def teams():
     if action == "create":
       # try:
       if session['sid'] == '':
-        return { 'status' : -999 }
+        return { 'status' : -1, 'message' : 'You must be signed in.' }
 
       handles = request.values.get('handles')
       handles = handles.split(';')
@@ -145,7 +106,7 @@ def teams():
       handles = [handle for handle in handles if handle]
       
       if len(handles) < 3 or len(handles) > 4:
-        return { 'status' : -1, 'message' : 'Your team size must be 3 or 4.' }
+        return { 'status' : -2, 'message' : 'Your team size must be 3 or 4.' }
       
       client = MongoClient("localhost")
       db = client.module01
@@ -153,28 +114,28 @@ def teams():
       team = request.values.get('team').strip()
 
       if team == "":
-        return { 'status' : -2, 'message' : 'Your team name must be nonempty.' }
+        return { 'status' : -3, 'message' : 'Your team name must be nonempty.' }
 
       result = teams.find_one({ "team": team })
 
       if result is not None:
-        return { 'status' : -3, 'message' : 'That team name is already taken.' }
+        return { 'status' : -4, 'message' : 'That team name is already taken.' }
 
       result = teams.find_one({ 'handles' : { '$in' : handles }})
       if result is not None:
-        return { 'status' : -4, 'message' : 'One or more of those handles are already in a team.' }
+        return { 'status' : -5, 'message' : 'One or more of those handles are already in a team.' }
 
       for handle in handles:
         result = db.handles.find_one({ 'handle' : handle })
         if result is None:
-          return { 'status' : -5, 'message' : 'One of those handles doesn&rsquo;t exist.' }
+          return { 'status' : -6, 'message' : 'One of those handles doesn&rsquo;t exist.' }
 
       if len(handles) != len(set(handles)):
-        return { 'status' : -6, 'message' : 'You can&rsquo;t provide a handle more than once.' }
+        return { 'status' : -7, 'message' : 'You can&rsquo;t provide a handle more than once.' }
 
       print(session['handle'])
       if session['handle'] not in handles:
-        return { 'status' : -7, 'message' : 'Make sure you list yourself among the teammates.' }
+        return { 'status' : -8, 'message' : 'Make sure you list yourself among the teammates.' }
 
       result = teams.update_one({"$or" : [{"handles": {'$in' : handles }}, {'team': team}]},
         { "$setOnInsert": { "team": team, "handles" : handles }}, upsert = True)
@@ -266,7 +227,7 @@ def signup():
       print(handle)
 
       if handle == '':
-        return { 'status' : -2 }
+        return { 'status' : -1 }
         
       password = generate(7)
       print(password)
@@ -283,10 +244,10 @@ def signup():
 
       elif result.raw_result['updatedExisting'] == True:
         print("That handle is already taken.")
-        return { 'status' : -1, 'handle' : handle }
+        return { 'status' : -2, 'handle' : handle }
      
     except:
-      pass
+      return { 'status' : -3, 'message' : 'An unknown error occurred.' }
 
     return { 'status' : 0 }
 

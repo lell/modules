@@ -2,8 +2,30 @@ html {
   overflow-y: scroll;
 }
 
+@font-face {
+  font-family: "Roboto";
+  src: url("Roboto-Thin.ttf");
+}
+
+@font-face {
+  font-family: "RobotoRegular";
+  src: url("Roboto-Regular.ttf");
+}
+@font-face {
+  font-family: "RobotoLight";
+  src: url("Roboto-Light.ttf");
+}
+@font-face {
+  font-family: "LatoRegular";
+  src: url("Lato-Regular.ttf");
+}
+@font-face {
+  font-family: "PoppinsRegular";
+  src: url("Poppins-Regular.ttf");
+}
+
 body {
-  font-family: "Trebuchet MS", sans-serif;
+  font-family: "Roboto"; //"Trebuchet MS", sans-serif;
   background-color: #282328; 
   color: #e0dee2;
   margin: 0px;
@@ -173,7 +195,7 @@ div.manual1 {
 
 @font-face {
   font-family:'DroidSansMono';
-  src: url('static/DroidSansMono.ttf');
+  src: url('DroidSansMono.ttf');
 }
 
 div.manual2 {
@@ -265,6 +287,8 @@ div.footer {
 }
 
 div.bottom {
+  font-family: "LatoLight", sans-serif;
+  font-size: 12px;
   margin-top: 0px;
   margin-left: 50px;
   margin-right: 50px;
@@ -319,4 +343,22 @@ input {
 
 #droparea.highlight {
   border-color: purple;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table tr.board {
+  border-bottom: 1px solid #3d3639;
+  padding: 5px;
+  background-color: #282328;
+  color: #9388a1;
+}
+
+table td.board {
+  padding: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: DroidSansMono;
 }
