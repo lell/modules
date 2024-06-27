@@ -47,9 +47,8 @@ def auth():
 
   return { "sid" : '', "handle" : "", "team" : "" }
 
-def teammates():
-  client = MongoClient("localhost")
-  db = client.module01
+def gethandle():
+  handle = ""
   if 'sid' in request.cookies:
     sid = request.cookies['sid']
     client = MongoClient("localhost")
@@ -57,9 +56,50 @@ def teammates():
     sessions = db.sessions
     result = sessions.find_one({'session' : sid})
 
-    handle = ""
     if result is not None:
       handle = result["handle"]
+
+  return handle
+
+def getteam(handle = ""):
+  if handle == "":
+    handle = gethandle()
+
+  client = MongoClient("localhost")
+  db = client.module01
+  teams = db.teams
+  result = teams.find_one({ 'handles' : { '$in' : [ handle ] }})
+  if result is not None:
+    return result["team"]
+
+  return ""
+
+
+def getteams():
+  client = MongoClient("localhost")
+  db = client.module01
+  teams = db.teams
+  results = teams.find({})
+  teams = []
+  for result in results:
+    teams.append(result["team"])
+
+  return teams
+
+def teammates(handle = ""):
+  client = MongoClient("localhost")
+  db = client.module01
+  if handle == "":
+    if 'sid' in request.cookies:
+      sid = request.cookies['sid']
+      client = MongoClient("localhost")
+      db = client.module01
+      sessions = db.sessions
+      result = sessions.find_one({'session' : sid})
+
+      handle = ""
+      if result is not None:
+        handle = result["handle"]
 
     teams = db.teams
     result = teams.find_one({ 'handles' : { '$in' : [ handle ] }})
@@ -72,6 +112,29 @@ def teammates():
 
   return []
   
+def leaderboard():
+  teams = getteams()
+  results = []
+  for team in teams:
+    client = MongoClient("localhost")
+    db = client.module01
+    teams = db.teams
+    result = teams.find_one({ 'team' : team })
+    if result is None:
+      return []
+
+    handles = result["handles"]
+
+    tasks = db.tasks
+    print(team)
+    print(handles)
+    files = tasks.find({ 'handle' : { '$in' : handles }, 'type' : 'evaluated' })
+    files.sort("public", DESCENDING)
+    files = [file for file in files]
+    if len(files) > 0:
+      results.append(files[0])
+
+  return results
 
 def evaluated():
   handles = teammates()

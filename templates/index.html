@@ -32,7 +32,7 @@
     <div class="header">
       <big>
         <center>
-          <div name="topbar" style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px; font-family: 'PoppinsRegular';">
+          <div class="topbar" name="topbar">
             {% if session is defined and session.sid is defined and session.sid|length > 0 %}
               Leaderboard &nbsp;&nbsp;{% if session is defined and session.team is defined and session.team|length > 0 %}
               <a href="submit.html">Submissions</a> &nbsp;&nbsp;{% endif %}
@@ -82,15 +82,17 @@
     <div class="middle1">
       <span class="middle2">
         <div class="middle2" style="margin-top:30px;">
-          <h2>
+          <h2 style="font-family: PoppinsLight;">
             Leaderboard
           </h2>
 
           <br>
           <div class="content">
+<div name="previous">
+</div>
             <p class="content">
               {% if session is defined and session.handle is defined and session.handle|length > 0  %}
-                Hello, <i>{{ session.handle }}</i> !<br><br>
+                Hello, <i>{{ session.handle }}!</i><br><br>
               {% else %}
                 Hello!
               {% endif %}
@@ -101,4 +103,24 @@
   </div>
   {% include 'footer.html' %}
 </body>
+
+<script>
+$(function() {
+  function check() {
+    $.post({
+      url: "index.html",
+      data: { },
+      success: function(data, status) {
+        //alert(data[0]["handle"]);
+        $('div[name="previous"]').html(data["content"]);
+        setTimeout(check, 5000);
+      }
+    });
+  }
+
+  check();
+
+});
+
+</script>
 </html>

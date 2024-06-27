@@ -31,7 +31,7 @@
     <div class="header">
       <big>
         <center>
-          <div style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
+          <div name="topbar" class="topbar">
             <a href="index.html">Leaderboard</a> &nbsp;&nbsp;
             <a href="data.html">Data</a> &nbsp;&nbsp;
             <a href="signup.html"> Signup</a> &nbsp;&nbsp;
@@ -112,7 +112,7 @@ click = function(event) {
           }
         } catch(error) {
         }
-
+        working = 0;
         setup();
         $("button").on("click", click);
         $('p[name="content"]').css({ 'opacity' : 1.0 });

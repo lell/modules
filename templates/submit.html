@@ -42,7 +42,7 @@
     <div class="header">
       <big>
         <center>
-          <div style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
+          <div class="topbar">
             <a href="index.html">Leaderboard</a> &nbsp;&nbsp;
             Submissions &nbsp;&nbsp;
             <a href="teams.html">Teams</a> &nbsp;&nbsp;
@@ -94,7 +94,7 @@
 <p class="content" name="content">
 {% if session is defined and session.handle is defined and session.handle|length > 0  %}
 Hello, <i>{{ session.handle }}!</i> Drag-and-drop a file below or click-and-browse to make a new submission.&nbsp;&nbsp;&mdash;<img name="parrot" style="top: 2pt; position: relative;" src="/static/parrot.png" border=0 width=24pt>
-<div id="droparea">
+<div id="droparea" class="waitdrop">
     +
 </div>
 <div style="white-space: normal;">
@@ -160,8 +160,10 @@ $(function() {
   $('#droparea').on(
     'dragenter',
     function(e) {
-      $("#droparea").css("font-weight", "bold");
-      $("#droparea").css("border-color", "#e0dee2");
+      if (!working) {
+        $('#droparea').removeClass();
+        $('#droparea').addClass("hoverdrop") 
+      }
       e.preventDefault();
       e.stopPropagation();
     }
@@ -169,35 +171,34 @@ $(function() {
 
   $("#droparea").mouseenter(function(){
     if (!working) {
-      $("#droparea").css("border-color", "#e0dee2");
+      $('#droparea').addClass("hovering") 
     }
   });
 
   $("#droparea").mouseleave(function(){
     if (!working) {
-      $("#droparea").css("border-color", "#3d3639");
+      $("#droparea").removeClass("hovering");
+      $("#droparea").addClass("waitdrop");
     }
   });
 
   $('#droparea').on(
     'dragleave',
     function(e) {
-      $("#droparea").css("font-weight", "normal");
-      $("#droparea").css("border-color", "#3d3639");
+      if (!working) {
+        $("#droparea").removeClass("hoverdrop");
+        $("#droparea").addClass("waitdrop");
+      }
       e.preventDefault();
       e.stopPropagation();
     }
   )
-
-  function upload(files) {
-  }
 
   function check() {
     $.post({
       url: "submit.html",
       data: { },
       success: function(data, status) {
-        //alert(data[0]["handle"]);
         $('div[name="previous"]').html(data["content"]);
         setTimeout(check, 5000);
       }
@@ -209,11 +210,12 @@ $(function() {
   $('#droparea').on(
       'drop',
       function(e){
+        working = 1;
+        $('img[name="parrot"]').attr('src', '/static/party.gif')
         e.preventDefault();
         e.stopPropagation();
-      $("#droparea").css("font-weight", "bold");
-      $("#droparea").css("color", "#a9a9a9");
-      $("#droparea").css("border-color", "#a9a9a9");
+        $("#droparea").removeClass();
+        $("#droparea").addClass("working");
         if (e.originalEvent.dataTransfer.files.length > 1) {
           alert("Please upload one file.");
           return;
@@ -226,7 +228,6 @@ $(function() {
           var fd = new FormData();
           var file = e.originalEvent.dataTransfer.files;
           fd.append('file', file[0]);
-          working = 1;
           $.ajax({
             url: "upload.html",
             type: "POST",
@@ -235,7 +236,14 @@ $(function() {
             processData: false,
             dataType: 'json',
             success: response => {
-              //alert("File uploaded successfully");
+              setTimeout(function() {
+                working = 0;
+                $('img[name="parrot"]').attr('src', '/static/parrot.png')
+                $("#droparea").removeClass();
+                $("#droparea").addClass("waitdrop");
+              }, 1000);
+              
+              return;
             }
           });
         }

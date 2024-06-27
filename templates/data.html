@@ -32,7 +32,7 @@
     <div class="header">
       <big>
         <center>
-          <div style="line-height: 2.0; padding-top:15px; padding-left:15px; padding-right: 15px;">
+          <div name="topbar" class="topbar">
             {% if session is defined and session.sid is defined and session.sid|length > 0 %}
               <a href="/">Leaderboard</a> &nbsp;&nbsp;
               <a href="submit.html">Submissions</a> &nbsp;&nbsp;
@@ -90,7 +90,7 @@
           <div class="content">
             <p class="content">
               {% if session is defined and session.handle is defined and session.handle|length > 0  %}
-                Hello, <i>{{ session.handle }}</i> !<br><br>
+                Hello, <i>{{ session.handle }}!</i><br><br>
               {% else %}
                 Hello!
               {% endif %}

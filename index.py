@@ -66,7 +66,7 @@ def upload():
 @app.route('/submit.html', methods = ['GET', 'POST'])
 def submit():
   if request.method == 'POST':
-    content = "<center><table> <tr class='board'> <td class='board'> Time </td> <td class='board'> Submitter </td> <td class='board'> Public </td> <td class='board'> Private </td> </tr> "
+    content = "<center><table> <tr class='board'> <td class='board'> Time </td> <td class='board'> Submitter </td> <td class='board'> Score </td> <td class='board'>  </td> </tr> "
 
     for result in evaluated():
       public = "?"
@@ -77,7 +77,7 @@ def submit():
       content = content + "<td class='board'>" + timestamp(result["time"]) + "</td>"
       content = content + "<td class='board'>" + result["handle"] + "</td>"
       content = content + "<td class='board'>" + public + "</td>"
-      content = content + "<td class='board'> ? </td>"
+      content = content + "<td class='board bin'> x </td>"
       content = content + "</tr>"
 
     content = content + "</table></center>"
@@ -257,12 +257,35 @@ def signup():
     return result
 
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/', methods = ['GET'])
 @app.route('/index.html', methods = ['GET', 'POST'])
 def main():
-  session = auth()
-  result = render_template('index.html', session = session)
-  return result
+  if request.method == 'POST':
+    content = "<center><table> <tr class='board'> <td class='board'> Rank </td> <td class='board'> Team </td> <td class='board'> Score </td> </tr> "
+
+    rank = 1
+    for result in leaderboard():
+      public = "?"
+      if "public" in result:
+        public = "%0.2f" % (100 * result["public"]) + "%"
+      
+      handle = result["handle"]
+      team = getteam(handle)
+      content = content + "<tr class='board'>"
+      content = content + "<td class='board'>" + str(rank) + "</td>"
+      content = content + "<td class='board'>" + team + "</td>"
+      content = content + "<td class='board'>" + public + "</td>"
+      content = content + "</tr>"
+      rank = rank + 1
+
+    content = content + "</table></center>"
+    print(content)
+    return { "content" : content }
+
+  else:
+    session = auth()
+    result = render_template('index.html', session = session)
+    return result
 
 if __name__ == '__main__':
   handler = RotatingFileHandler('app.log', maxBytes=100000, backupCount=3)

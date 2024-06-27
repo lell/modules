@@ -16,6 +16,7 @@ function eraseCookie(key) {
 
 var working = 0;
 setup = function() {
+  working = 0;
   $("#button").button();
   $("#button-icon").button({
     icon: "ui-icon-gear",

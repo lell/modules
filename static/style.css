@@ -20,6 +20,10 @@ html {
   src: url("Lato-Regular.ttf");
 }
 @font-face {
+  font-family: "PoppinsLight";
+  src: url("Poppins-Light.ttf");
+}
+@font-face {
   font-family: "PoppinsRegular";
   src: url("Poppins-Regular.ttf");
 }
@@ -96,6 +100,7 @@ u {
 
 h2 {
   padding-top: 20px;
+  font-family: PoppinsLight;
 }
 
 #dialog-link {
@@ -306,44 +311,10 @@ input {
 }
 
 
-#droparea {
-  border: 4px dashed #ccc;
-  border-radius: 10px;
-  font-size: 36pt;
-  max-width: 320px;
-  max-height: 240px;
-  text-align: center;
-  width: 80%;
-  font-family: sans-serif;
-  margin: 10px auto;
-  padding: 20px;
-  text-decoration: none;
-  color: #e0dee2;
-  background-color: #58525e; 
-  border-color: #3d3639;
-  color: #e0dee2;
-}
-#droparea:hover {
-  border: 4px dashed #ccc;
-  border-radius: 10px;
-  font-size: 36pt;
-  max-width: 320px;
-  max-height: 240px;
-  text-align: center;
-  width: 80%;
-  font-family: sans-serif;
-  margin: 10px auto;
-  padding: 20px;
-  text-decoration: none;
-  color: #e0dee2;
-  background-color: #58525e; 
-  color: #e0dee2;
-  border-color: #e0dee2;
-}
 
-#droparea.highlight {
-  border-color: purple;
-}
+//#droparea.highlight {
+//  border-color: purple;
+//}
 
 table {
   border-collapse: collapse;
@@ -361,4 +332,88 @@ table td.board {
   text-align: center;
   vertical-align: middle;
   font-family: DroidSansMono;
+}
+
+table td.bin {
+  padding: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: DroidSansMono;
+  position: relative;
+  top: -2px;
+}
+
+div.topbar {
+  line-height: 2.0; padding-top:15px; padding-left:15px; padding-right:     15px; font-family: 'PoppinsRegular';
+}
+
+div.waitdrop {
+  border: 4px dashed #ccc;
+  border-radius: 10px;
+  font-size: 36pt;
+  max-width: 320px;
+  max-height: 240px;
+  text-align: center;
+  width: 80%;
+  font-family: sans-serif;
+  margin: 10px auto;
+  padding: 20px;
+  text-decoration: none;
+  color: #e0dee2;
+  background-color: #58525e; 
+  border-color: #3d3639;
+}
+
+div.hovering {
+  border: 4px dashed #ccc;
+  border-radius: 10px;
+  font-size: 36pt;
+  max-width: 320px;
+  max-height: 240px;
+  text-align: center;
+  width: 80%;
+  font-family: sans-serif;
+  margin: 10px auto;
+  padding: 20px;
+  text-decoration: none;
+  color: #e0dee2;
+  background-color: #58525e; 
+  border-color: #e0dee2;
+}
+
+div.hoverdrop {
+  border: 4px dashed #ccc;
+  font-weight: bold;
+  border-color: #e0dee2;
+  border-radius: 10px;
+  font-size: 36pt;
+  max-width: 320px;
+  max-height: 240px;
+  text-align: center;
+  width: 80%;
+  font-family: sans-serif;
+  margin: 10px auto;
+  padding: 20px;
+  text-decoration: none;
+  color: #e0dee2;
+  background-color: #58525e; 
+}
+
+
+div.working {
+  border: 4px dashed #ccc;
+  font-weight: bold;
+  border-radius: 10px;
+  font-size: 36pt;
+  max-width: 320px;
+  max-height: 240px;
+  text-align: center;
+  width: 80%;
+  font-family: sans-serif;
+  margin: 10px auto;
+  padding: 20px;
+  text-decoration: none;
+  background-color: #58525e; 
+  color: #a9a9a9;
+  border-color: #a9a9a9;
 }
